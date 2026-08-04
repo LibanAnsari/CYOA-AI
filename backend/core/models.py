@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import List
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
 class StrictBaseModel(BaseModel):
@@ -21,7 +21,7 @@ class StoryNodeLLM(StrictBaseModel):
 
     isWinningEnding: bool = Field(default=False, description="Whether this ending is a winning ending.")
 
-    options: List[StoryOptionLLM] = Field(default_factory=list, description="Available choices from this node.")
+    options: List[StoryOptionLLM] = Field(default_factory=list, min_length=0, max_length=3, description="Available choices from this node.")
 
 
 class StoryLLMResponse(StrictBaseModel):

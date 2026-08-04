@@ -18,6 +18,7 @@ class StoryGenerator:
     
     @classmethod
     def _get_agent(cls):
+        print(f"Initializing agent with model: {settings.LLM_MODEL}")
         return create_agent(
             model=init_chat_model(settings.LLM_MODEL, temperature=0.7),
             system_prompt=STORY_PROMPT_CREATIVE,
@@ -29,7 +30,12 @@ class StoryGenerator:
     def generate_story(cls, db: Session, session_id: str, theme: str = "Fantasy") -> Story:
         agent = cls._get_agent()
         
-        response = agent.invoke({"messages": [HumanMessage(content=f"Generate a story with the theme: {theme}")], "session_id": session_id})
+        response = agent.invoke({"messages": [HumanMessage(
+            content=(
+                "Generate a story.\n\n"
+                f'The user requested this theme: "{theme}"'
+            )
+        )], "session_id": session_id})
         
         story_structure = response["structured_response"]
         

@@ -18,6 +18,20 @@ router = APIRouter(
 )
 
 
+def fail_processing_jobs(db: Session, error_message: str) -> int:
+    processing_jobs = db.query(StoryJob).filter(StoryJob.status == "processing").all()
+
+    for job in processing_jobs:
+        job.status = "failed"
+        job.error = error_message
+        job.completed_at = datetime.now()
+
+    if processing_jobs:
+        db.commit()
+
+    return len(processing_jobs)
+
+
 @router.get("/{job_id}", response_model=StoryJobResponse)
 def get_job_status(job_id: str, db: Session = Depends(get_db)):
     

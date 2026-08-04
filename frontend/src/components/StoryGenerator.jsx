@@ -21,7 +21,21 @@ const StoryGenerator = () => {
         setJobId(null);
         setJobStatus(null);
         setError(null);
+        localStorage.removeItem('activeStoryJobId');
+        localStorage.removeItem('activeStoryTheme');
     }
+
+    useEffect(() => {
+        const storedJobId = localStorage.getItem('activeStoryJobId');
+        const storedTheme = localStorage.getItem('activeStoryTheme');
+
+        if (storedJobId) {
+            setJobId(storedJobId);
+            setTheme(storedTheme || '');
+            setLoading(true);
+            pullJobStatus(storedJobId);
+        }
+    }, []);
 
     useEffect(() => {
         let pollInterval;
@@ -43,6 +57,8 @@ const StoryGenerator = () => {
         try{
             setLoading(true);
             setJobStatus('completed');
+            localStorage.removeItem('activeStoryJobId');
+            localStorage.removeItem('activeStoryTheme');
             window.dispatchEvent(new Event('story-created'));
             navigate(`/story/${id}`);
         } catch (err) {
@@ -67,9 +83,13 @@ const StoryGenerator = () => {
         } catch (err) {
             if (err.response?.status === 404) {
                 setError('Job not found. Please try again.');
+                localStorage.removeItem('activeStoryJobId');
+                localStorage.removeItem('activeStoryTheme');
+                setLoading(false);
             } else {
                 const detail = err.response?.data?.detail || err.message;
                 setError(`An error occurred while pulling job status: ${detail}`);
+                setLoading(false);
             }
         }
     }
@@ -84,11 +104,27 @@ const StoryGenerator = () => {
             const { job_id , status } = response.data;
             setJobId(job_id);
             setJobStatus(status);
+            localStorage.setItem('activeStoryJobId', job_id);
+            localStorage.setItem('activeStoryTheme', submittedTheme);
 
             pullJobStatus(job_id);
         } catch (e) {
-            setLoading(false);
             const detail = e.response?.data?.detail || e.message;
+            if (e.response?.status === 409) {
+                const storedJobId = localStorage.getItem('activeStoryJobId');
+                const storedTheme = localStorage.getItem('activeStoryTheme');
+
+                if (storedJobId) {
+                    setTheme(storedTheme || submittedTheme);
+                    setJobId(storedJobId);
+                    setLoading(true);
+                    setError(null);
+                    pullJobStatus(storedJobId);
+                    return;
+                }
+            }
+
+            setLoading(false);
             setError(`Failed to generate story: ${detail}`);
         }
     }

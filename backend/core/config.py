@@ -8,7 +8,7 @@ class Settings(BaseSettings):
     
     DATABASE_URL: str
     
-    LLM_MODEL: str = "gpt-5.4-mini"
+    LLM_MODEL: str = "gpt-5-mini"
     
     ALLOWED_ORIGINS: str = ""
     

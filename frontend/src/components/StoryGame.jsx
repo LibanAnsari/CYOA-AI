@@ -46,7 +46,7 @@ const StoryGame = ({ story, onNewStory}) => {
 
             <div className="story-content">
                 {currentNode && (
-                    <div className="story-node">
+                    <div key={currentNodeId} className="story-node">
                         <p>{currentNode.content}</p>
                         {isEnding ? (
                             <div className="story-ending">

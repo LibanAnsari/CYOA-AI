@@ -11,6 +11,14 @@ const ThemeInput = ({ onSubmit }) => {
             setError("Theme cannot be empty.");
             return;
         }
+        if (theme.trim().length < 3) {
+            setError("Theme must be at least 3 characters long.");
+            return;
+        }
+        if (theme.trim().length > 200) {
+            setError("Theme cannot exceed 200 characters.");
+            return;
+        }
         setError("");
         onSubmit(theme);    
     }   

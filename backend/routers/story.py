@@ -2,7 +2,7 @@ import uuid
 from typing import List, Optional
 from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, Cookie, Response, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Cookie, Request, Response, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from db.database import SessionLocal, get_db
@@ -40,19 +40,30 @@ def get_active_job_for_session(db: Session, session_id: str) -> Optional[StoryJo
 
 @router.post("/create", response_model=StoryJobResponse)
 def create_story(
+    http_request: Request,
     request: CreateStoryRequest,
     background_tasks: BackgroundTasks,
     response: Response,
     session_id: str = Depends(get_session_id),
     db: Session = Depends(get_db)
 ):
-    response.set_cookie(key="session_id", value=session_id, httponly=True)
+    response.set_cookie(
+        key="session_id",
+        value=session_id,
+        httponly=True,
+        samesite="lax",
+        secure=True,      # when using HTTPS
+        max_age=60*60*24*30
+    )
+
+    ip_address = http_request.client.host
+    print(f"Received story generation request from IP: {ip_address}, session_id: {session_id}, theme: {request.theme}")
 
     active_job = get_active_job_for_session(db, session_id)
     if active_job:
         raise HTTPException(
             status_code=409,
-            detail="A story generation job is already in progress for this session"
+            detail="A story generation job is already in progress for this session. Please wait for it to complete before starting a new one."
         )
     
     job_id = str(uuid.uuid4())
@@ -144,7 +155,7 @@ def build_comeplete_story_tree(db: Session, story: Story) -> CompleteStoryRespon
         id=story.id,
         title=story.title,
         theme=story.theme,
-        session_id=story.session_id,
+        # session_id=story.session_id,
         created_at=story.created_at,
         root_node=node_dict[root_node.id],
         all_nodes=node_dict
