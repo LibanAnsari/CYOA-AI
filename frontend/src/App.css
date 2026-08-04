@@ -25,9 +25,16 @@ body {
 }
 
 .app-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  min-height: 100vh;
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.app-container header {
+  grid-column: 1 / -1;
 }
 
 header {
@@ -38,6 +45,104 @@ header {
 header h1 {
   color: var(--primary-color);
   margin-bottom: 0.5rem;
+}
+
+.app-container nav {
+  position: sticky;
+  top: 1.5rem;
+  height: calc(100vh - 3rem);
+}
+
+.sidebar {
+  height: 100%;
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--card-background) 0%, #f4f9ff 100%);
+  border: 1px solid #dbe7f4;
+  box-shadow: var(--box-shadow);
+  overflow-y: auto;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e6edf5;
+}
+
+.sidebar-header h2 {
+  color: var(--primary-color);
+  font-size: 1.15rem;
+  margin-bottom: 0;
+}
+
+.home-btn {
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--card-background);
+  color: var(--primary-color);
+  border: 1px solid #d7e4f3;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(74, 111, 165, 0.12);
+  flex: 0 0 auto;
+}
+
+.home-btn:hover {
+  background: #f7fbff;
+  color: var(--secondary-color);
+}
+
+.home-btn svg {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+.sidebar-content {
+  margin-bottom: 1rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sidebar li {
+  width: 100%;
+}
+
+.sidebar button {
+  width: 100%;
+  text-align: left;
+  background: #eef6ff;
+  color: var(--text-color);
+  border: 1px solid #d7e4f3;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  box-shadow: none;
+}
+
+.sidebar button:hover {
+  background: #e1efff;
+  color: var(--primary-color);
+}
+
+.sidebar .home-btn {
+  width: 2.5rem;
+  text-align: center;
+}
+
+.app-container main {
+  min-width: 0;
 }
 
 footer {
@@ -157,14 +262,19 @@ button:hover {
   margin-bottom: 1.5rem;
 }
 
+.loading-container h3 {
+  color: var(--secondary-color);
+  margin-bottom: 1.5rem;
+}
+
 .loading-animation {
   margin: 2rem auto;
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid rgba(0, 0, 0, 0.1);
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(0, 0, 0, 0.1);
   border-top-color: var(--accent-color);
   border-radius: 50%;
   margin: 0 auto;
@@ -368,4 +478,15 @@ button:hover {
 
 .error-message button:hover {
   background-color: #d32f2f;
+}
+
+@media (max-width: 900px) {
+  .app-container {
+    grid-template-columns: 1fr;
+  }
+
+  .app-container nav {
+    position: static;
+    height: auto;
+  }
 }

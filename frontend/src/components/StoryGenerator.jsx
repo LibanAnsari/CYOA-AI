@@ -43,6 +43,7 @@ const StoryGenerator = () => {
         try{
             setLoading(true);
             setJobStatus('completed');
+            window.dispatchEvent(new Event('story-created'));
             navigate(`/story/${id}`);
         } catch (err) {
             setError(`An error occurred while fetching the story: ${err.message}`);

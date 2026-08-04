@@ -3,6 +3,7 @@ import './App.css'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import StoryLoader from "./components/StoryLoader.jsx";
 import StoryGenerator from "./components/StoryGenerator.jsx";
+import SideBar from "./components/SideBar.jsx";
 
 const App = () => {
     return (
@@ -11,6 +12,9 @@ const App = () => {
               <header>
                 <h1>Interactive Story Game</h1>
               </header>
+              <nav>
+                <SideBar />
+              </nav>
               <main>
                 <Routes>
                   <Route path="/story/:id" element={<StoryLoader />} />

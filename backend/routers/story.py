@@ -149,3 +149,23 @@ def build_comeplete_story_tree(db: Session, story: Story) -> CompleteStoryRespon
         root_node=node_dict[root_node.id],
         all_nodes=node_dict
     )
+
+
+@router.get("/all-stories")
+def get_all_stories():
+    db = SessionLocal()
+
+    completed_jobs = db.query(StoryJob).filter(StoryJob.status == "completed").all()
+    complete_stories = []
+    for job in completed_jobs:
+        story = db.query(Story).filter(Story.id == job.story_id).first()
+        if story:
+            complete_stories.append({
+                "story_id": story.id,
+                "title": story.title,
+                "theme": story.theme
+            })
+
+    db.close()
+    
+    return complete_stories        
