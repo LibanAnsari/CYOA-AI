@@ -12,8 +12,6 @@ class Settings(BaseSettings):
     
     ALLOWED_ORIGINS: str = ""
     
-    DEBUG: bool = False
-    
     RATE_LIMIT_ENABLED: bool = False
     
     SESSION_DAILY_LIMIT: int = 3
