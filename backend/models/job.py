@@ -15,8 +15,9 @@ class StoryJob(Base):
     __tablename__ = "story_jobs"
     
     id = Column(Integer, primary_key=True, index=True)
-    job_id = Column(String, index=True, unique=True)
+    job_id = Column(String, index=True, unique=True)    
     session_id = Column(String, index=True)
+    ip_address = Column(String(45), index=True)
     theme = Column(String)
     status = Column(String)
     story_id = Column(Integer, index=True, nullable=True)

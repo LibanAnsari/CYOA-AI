@@ -125,7 +125,11 @@ const StoryGenerator = () => {
             }
 
             setLoading(false);
-            setError(`Failed to generate story: ${detail}`);
+            if (e.response?.status === 429) {
+                setError(detail);
+            } else {
+                setError(`Failed to generate story: ${detail}`);
+            }
         }
     }
 

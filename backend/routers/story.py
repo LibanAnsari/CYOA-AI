@@ -1,8 +1,8 @@
 import uuid
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, time
 
-from fastapi import APIRouter, Depends, HTTPException, Cookie, Request, Response, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Cookie, Request, Response, BackgroundTasks, logger
 from sqlalchemy.orm import Session
 
 from db.database import SessionLocal, get_db
@@ -14,6 +14,7 @@ from schemas.story import CompleteStoryResponse, CompleteStoryNodeResponse, Crea
 from schemas.job import StoryJobResponse
 
 from core.story_generator import StoryGenerator
+from core.config import settings
 
 router = APIRouter(
     prefix="/stories",
@@ -37,6 +38,25 @@ def get_active_job_for_session(db: Session, session_id: str) -> Optional[StoryJo
     if processing_job:
         return processing_job
 
+def get_completed_jobs_count_for_today(db: Session, identifier: str, mode: str = "session") -> int:
+    today = datetime.combine(datetime.now().date(), time.min)
+    
+    if mode == "session":
+        completed_today = db.query(StoryJob).filter(
+            StoryJob.session_id == identifier,
+            StoryJob.status == "completed",
+            StoryJob.completed_at >= today
+        ).count()
+    elif mode == "ip_address":
+        completed_today = db.query(StoryJob).filter(
+            StoryJob.ip_address == identifier,
+            StoryJob.status == "completed",
+            StoryJob.completed_at >= today
+        ).count()
+    else:
+        raise ValueError(f"Unknown mode: {mode}")    
+    
+    return completed_today
 
 @router.post("/create", response_model=StoryJobResponse)
 def create_story(
@@ -65,12 +85,30 @@ def create_story(
             status_code=409,
             detail="A story generation job is already in progress for this session. Please wait for it to complete before starting a new one."
         )
+        
+    if settings.RATE_LIMIT_ENABLED:
+        completed_today_session = get_completed_jobs_count_for_today(db, session_id, mode="session")
+        logger.info(f"Session {session_id} has completed {completed_today_session} stories today.")
+        if completed_today_session >= settings.SESSION_DAILY_LIMIT:
+            raise HTTPException(
+                status_code=429,
+                detail=f"You have reached your daily story generation limit ({settings.SESSION_DAILY_LIMIT}). Please try again tomorrow."
+            )
+        
+        completed_today_ip = get_completed_jobs_count_for_today(db, ip_address, mode="ip_address")
+        logger.info(f"IP {ip_address} has completed {completed_today_ip} stories today.")
+        if completed_today_ip >= settings.IP_DAILY_LIMIT:
+            raise HTTPException(
+                status_code=429,
+                detail=f"Daily story generation limit ({settings.IP_DAILY_LIMIT}) reached. Please try again tomorrow."
+            )
     
     job_id = str(uuid.uuid4())
     
     job = StoryJob(
         job_id=job_id,
         session_id=session_id,
+        ip_address=ip_address,
         theme=request.theme,
         status="pending"
     )
@@ -127,12 +165,12 @@ def get_complete_story(story_id: int, db: Session = Depends(get_db)):
     if not story:
         raise HTTPException(status_code=404, detail="Story not found")
     
-    complete_story = build_comeplete_story_tree(db, story)
+    complete_story = build_complete_story_tree(db, story)
     
     return complete_story
 
 
-def build_comeplete_story_tree(db: Session, story: Story) -> CompleteStoryResponse:
+def build_complete_story_tree(db: Session, story: Story) -> CompleteStoryResponse:
     nodes = db.query(StoryNode).filter(StoryNode.story_id == story.id).all()
     
     node_dict = {}

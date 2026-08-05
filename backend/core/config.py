@@ -12,6 +12,13 @@ class Settings(BaseSettings):
     
     ALLOWED_ORIGINS: str = ""
     
+    DEBUG: bool = False
+    
+    RATE_LIMIT_ENABLED: bool = False
+    
+    SESSION_DAILY_LIMIT: int = 3
+    IP_DAILY_LIMIT: int = 6
+    
     OPENAI_API_KEY: str
     
     # Because .env does not support lists, we need to parse the ALLOWED_ORIGINS string into a list of strings
