@@ -8,11 +8,13 @@ STORY_PROMPT_CREATIVE = """
                 1. Give the story a compelling title.
                 2. Begin with a clear, engaging starting situation.
                 3. Include both winning and losing endings.
-                4. Include at least one winning ending.
-                5. Every non-ending node MUST contain 1-3 options. DO NOT GIVE MORE THAN 3 OPTIONS PER NODE.
-                6. Every ending node must have an empty `options` array.
-                7. Each option object must contain exactly two properties: `text` and `nextNode`.
-                8. Each node object must contain only: `content`, `isEnding`, `isWinningEnding`, and `options`.
+                4. Include at least one winning ending. But keep the number of winning endings limited to 1 or 2, so that the player cannot easily find them.
+                5. Every non-ending node MUST contain MINIMUM 1 OPTION AND MAXIMUM 3 OPTIONS. Do NOT generate more than 3 options for any node.
+                6. Do NOT add any indication to which branch is longer or shorter, or which is winning or losing.
+                7. Mix options so that the player cannot predict which path is winning or losing. Do NOT generate the first option as the winning path every time. Vary the order of winning and losing paths.
+                8. Every ending node must have an empty `options` array.
+                9. Each option object must contain exactly two properties: `text` and `nextNode`.
+                10. Each node object must contain only: `content`, `isEnding`, `isWinningEnding`, and `options`.
 
                 Length and branching requirements:
                 - Generate 30-40 total story nodes. Respect the maximum node limit of 40.

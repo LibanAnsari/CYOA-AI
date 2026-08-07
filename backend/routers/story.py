@@ -2,7 +2,7 @@ import uuid
 from typing import List, Optional
 from datetime import datetime, time
 
-from fastapi import APIRouter, Depends, HTTPException, Cookie, Request, Response, BackgroundTasks, logger
+from fastapi import APIRouter, Depends, HTTPException, Cookie, Request, Response, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from db.database import SessionLocal, get_db
@@ -88,7 +88,7 @@ def create_story(
         
     if settings.RATE_LIMIT_ENABLED:
         completed_today_session = get_completed_jobs_count_for_today(db, session_id, mode="session")
-        logger.info(f"Session {session_id} has completed {completed_today_session} stories today.")
+        print(f"Session {session_id} has completed {completed_today_session} stories today.")
         if completed_today_session >= settings.SESSION_DAILY_LIMIT:
             raise HTTPException(
                 status_code=429,
@@ -96,7 +96,7 @@ def create_story(
             )
         
         completed_today_ip = get_completed_jobs_count_for_today(db, ip_address, mode="ip_address")
-        logger.info(f"IP {ip_address} has completed {completed_today_ip} stories today.")
+        print(f"IP {ip_address} has completed {completed_today_ip} stories today.")
         if completed_today_ip >= settings.IP_DAILY_LIMIT:
             raise HTTPException(
                 status_code=429,

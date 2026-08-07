@@ -1,4 +1,4 @@
-from fastapi import FastAPI, logger
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
@@ -18,7 +18,7 @@ async def recover_processing_jobs(app: FastAPI):
             "The backend restarted while this job was processing. Please start a new story generation request."
         )
         if recovered_jobs:
-            logger.info(f"Recovered {recovered_jobs} stale processing job(s) after startup.")
+            print(f"Recovered {recovered_jobs} stale processing job(s) after startup.")
         yield
     finally:
         db.close()

@@ -20,4 +20,5 @@ def get_db():
         db.close()
         
 def create_tables():
+    # print("Creating Tables on DATABASE_URL:", settings.DATABASE_URL)
     Base.metadata.create_all(bind=engine)

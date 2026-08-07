@@ -10,7 +10,7 @@ const LoadingStatus = ({ theme }) => {
                 <Spinner />
             </div>
 
-            <p className="loading-info">Please wait while we generate your story...</p>
+            <p className="loading-info">Please wait 30-60 seconds while we generate your story...</p>
         </div>
     )
 }

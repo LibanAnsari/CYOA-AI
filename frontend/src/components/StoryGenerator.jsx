@@ -43,7 +43,7 @@ const StoryGenerator = () => {
         if(jobId && jobStatus === "processing"){
             pollInterval = setInterval(() => {
                 pullJobStatus(jobId);
-            }, 5000);
+            }, 30000);
 
             return () => {
                 if (pollInterval) {

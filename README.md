@@ -30,10 +30,12 @@ Create `backend/.env` with your local settings:
 
 ```env
 OPENAI_API_KEY=your_openai_api_key
-DATABASE_URL=sqlite:///./database.db
+DATABASE_URL=postgresql+psycopg2://postgres:password@localhost:5432/interactive_story
 LLM_MODEL=gpt-5-mini
 ALLOWED_ORIGINS=http://localhost:5173
 ```
+
+If you prefer to split the database settings across individual variables, the backend also accepts `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, and `DB_NAME`.
 
 `backend/.env` and local database files are intentionally ignored by Git.
 

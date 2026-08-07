@@ -19,7 +19,7 @@ router = APIRouter(
 
 
 def fail_processing_jobs(db: Session, error_message: str) -> int:
-    processing_jobs = db.query(StoryJob).filter(StoryJob.status == "processing").all()
+    processing_jobs = db.query(StoryJob).filter(StoryJob.status == "processing" or StoryJob.status == "pending").all()
 
     for job in processing_jobs:
         job.status = "failed"
@@ -41,5 +41,3 @@ def get_job_status(job_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Job not found")
     
     return job
-
-
