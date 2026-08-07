@@ -39,3 +39,4 @@ dist-ssr
 **/ENV/
 
 .env
+.env.production

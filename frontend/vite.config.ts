@@ -11,15 +11,17 @@ export default defineConfig(({ command, mode }) => {
     server: {
       ...(env.VITE_DEBUG === 'true'
         ? {
-            proxy: {
-              '/api': {
-                target: 'http://localhost:8000',
-                changeOrigin: true,
-                secure: false,
-              },
+          proxy: {
+            '/api': {
+              target: 'http://localhost:8000',
+              changeOrigin: true,
+              secure: false,
             },
-          }
+          },
+        }
         : {}),
     },
   };
 });
+
+// The react app is deployed as a static site so theres no need for a proxy now, this is redundant after the .env changes
