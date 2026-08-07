@@ -7,10 +7,10 @@ from routers import story, job
 
 from db.database import SessionLocal, create_tables
 
-create_tables()  # Create tables if they don't exist
 
 @asynccontextmanager
-async def recover_processing_jobs(app: FastAPI):
+async def startup_and_db_manager(app: FastAPI):
+    create_tables()  # Create tables if they don't exist
     db = SessionLocal()
     try:
         recovered_jobs = job.fail_processing_jobs(
@@ -30,7 +30,7 @@ app = FastAPI(
     version="0.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
-    lifespan=recover_processing_jobs
+    lifespan=startup_and_db_manager
 )
 
 app.add_middleware(
