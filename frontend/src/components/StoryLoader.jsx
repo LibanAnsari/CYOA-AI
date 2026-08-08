@@ -24,6 +24,7 @@ const StoryLoader = () => {
     }, [id]);
 
     const loadStory = async (storyId) => {
+        setStory(null);
         setLoading(true);
         setError(null);
 
