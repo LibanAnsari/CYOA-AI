@@ -6,24 +6,24 @@ import StoryGenerator from "./components/StoryGenerator.jsx";
 import SideBar from "./components/SideBar.jsx";
 
 const App = () => {
-    return (
-        <Router>
-            <div className="app-container">
-              <header>
-                <h1>Interactive Story Game</h1>
-              </header>
-              <nav>
-                <SideBar />
-              </nav>
-              <main>
-                <Routes>
-                  <Route path="/story/:id" element={<StoryLoader />} />
-                  <Route path="/" element={<StoryGenerator />} />
-                </Routes>
-              </main>
-            </div>
-        </Router>
-    )
+  return (
+    <Router>
+      <div className="app-container">
+        <header>
+          <h1>Interactive Story Game</h1>
+        </header>
+        <nav>
+          <SideBar />
+        </nav>
+        <main>
+          <Routes>
+            <Route path="/story/:id" element={<StoryLoader />} />
+            <Route path="/" element={<StoryGenerator />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
+  )
 }
 
 export default App;
