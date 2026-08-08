@@ -42,7 +42,7 @@ const StoryGame = ({ story, onNewStory}) => {
         <div className="story-game">
             <header className='story-header'>
                 <h2>{story?.title || "Your Story"}</h2>
-                <h3>Theme: {story?.theme || "Unknown"}</h3>
+                <h3 className="story-theme">Theme: {story?.theme || "Unknown"}</h3>
             </header>
 
             <div className="story-content">

@@ -422,6 +422,15 @@ button:hover {
   color: var(--primary-color);
 }
 
+.story-theme {
+  margin-top: 0.35rem;
+  color: var(--secondary-color);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
 .story-content {
   margin-bottom: 2rem;
 }
