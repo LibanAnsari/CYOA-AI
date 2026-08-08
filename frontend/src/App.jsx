@@ -14,7 +14,7 @@ const App = () => {
 
         const checkServer = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/health`);
+                const response = await fetch(`${API_BASE_URL}/health`);
                 if (response.ok) {
                     sessionStorage.setItem('serverAwake', 'true');
                     setServerLoading(false);
