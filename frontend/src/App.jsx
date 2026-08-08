@@ -7,13 +7,16 @@ import SideBar from "./components/SideBar.jsx";
 import { API_BASE_URL } from "./util.jsx";
 
 const App = () => {
-    const [serverLoading, setServerLoading] = useState(true);
+    const [serverLoading, setServerLoading] = useState(() => !sessionStorage.getItem('serverAwake'));
 
     useEffect(() => {
+        if (!serverLoading) return;
+
         const checkServer = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/health`);
+                const response = await fetch(`${API_BASE_URL}/api/health`);
                 if (response.ok) {
+                    sessionStorage.setItem('serverAwake', 'true');
                     setServerLoading(false);
                 } else {
                     setTimeout(checkServer, 3000);
@@ -23,7 +26,7 @@ const App = () => {
             }
         };
         checkServer();
-    }, []);
+    }, [serverLoading]);
 
     if (serverLoading) {
         return (
